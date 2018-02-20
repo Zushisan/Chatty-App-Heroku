@@ -65,6 +65,7 @@ wss.on('connection', (ws) => {
 					let botResponse = { type: "incomingMessage", username: "bot", content: response.clever_output };
 					messages.push(botResponse)
 					data = data.concat(botResponse);
+					console.log(data)
 				});			
 				break;
 			case "postNotification":
