@@ -58,7 +58,7 @@ wss.on('connection', (ws) => {
 				data.type = "incomingMessage";
 				messages.push(data);
 				messagesInit = { type: "initMessages", messages: messages }
-
+				console.log("message format", messages)
 				cleverMessage = JSON.stringify(data.content);
 				console.log(cleverMessage)
 				cleverbot.write(cleverMessage, function (response) {
