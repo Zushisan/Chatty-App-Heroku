@@ -80,7 +80,7 @@ wss.on('connection', (ws) => {
 		}
 		data = JSON.stringify(data);
 		console.log("how it should look", data)
-		// ws.broadcast(data);
+		ws.broadcast(data);
 	});
 
 	let numberOfConnexions = { type: "incomingNumberOfConnexions", count: wss.clients.size };
