@@ -21,7 +21,7 @@ const wss = new SocketServer({ server }); // set it like the example
 
 
 cleverbot = new Cleverbot;
-cleverbot.configure({ botapi: process.env.API_KEY });
+cleverbot.configure({ botapi: "CC7c4DeP803JvvtSRqfONDPOPSw" }); // I DONT CARE
 
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
