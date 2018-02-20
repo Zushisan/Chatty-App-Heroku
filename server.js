@@ -43,13 +43,10 @@ wss.on('connection', (ws) => {
 	ws.send(JSON.stringify(messagesInit));
 
 	// Broadcast to all.
-	ws.broadcast = function broadcast(data, botData) {
+	ws.broadcast = function broadcast(data) {
 		wss.clients.forEach(function each(client) {
 			//if (client.readyState === SocketServer.OPEN) {
 			client.send(data);
-			if(botData){
-				client.send(botData)
-			}
 			//}
 		});
 	};
@@ -66,7 +63,7 @@ wss.on('connection', (ws) => {
 				cleverMessage = JSON.stringify(data.content);
 				cleverbot.write(cleverMessage, function (response) {
 					let botResponse = { type: "initMessages", messages: [response.clever_output] };
-					botData = JSON.stringify(botResponse);
+					messages.push(botResponse)
 				});			
 				break;
 			case "postNotification":
@@ -79,7 +76,7 @@ wss.on('connection', (ws) => {
 				ws.broadcast(data);
 		}
 		data = JSON.stringify(data);
-		ws.broadcast(data, botData);
+		ws.broadcast(data);
 	});
 
 	let numberOfConnexions = { type: "incomingNumberOfConnexions", count: wss.clients.size };
