@@ -1,9 +1,10 @@
 // server.js
-
+require('dotenv').config()
 const express = require('express');
 const path = require('path');
 const SocketServer = require('ws').Server; // remove server
 const uuidv4 = require('uuid/v4');
+const Cleverbot = require('cleverbot-node');
 
 // Set the port to 3001
 const PORT = process.env.PORT || 3001;
@@ -18,10 +19,14 @@ const server = express()
 const wss = new SocketServer({ server }); // set it like the example
 
 
+
+cleverbot = new Cleverbot;
+cleverbot.configure({ botapi: process.env.API_KEY });
+
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
-
+let cleverMessage = "";
 let messages = [];
 let messagesInit = { type: "initMessages", messages: messages } // Storing messages on server to render them to all users on connexion
 
@@ -53,6 +58,16 @@ wss.on('connection', (ws) => {
 				data.type = "incomingMessage";
 				messages.push(data);
 				messagesInit = { type: "initMessages", messages: messages }
+
+				cleverMessage = JSON.stringify(data.content);
+				console.log(cleverMessage)
+				cleverbot.write(cleverMessage, function (response) {
+					let botResponse = { type: "initMessages", messages: response };
+					botResponse = JSON.stringify(botResponse);
+					console.log(botResponse)
+					ws.broadcast(botResponse);
+				});
+			
 				break;
 			case "postNotification":
 				data.type = "incomingNotification";
