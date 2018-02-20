@@ -22,6 +22,7 @@ const wss = new SocketServer({ server }); // set it like the example
 
 cleverbot = new Cleverbot;
 cleverbot.configure({ botapi: "CC7c4DeP803JvvtSRqfONDPOPSw" }); // I DONT CARE
+let botData = "";
 
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
@@ -42,10 +43,13 @@ wss.on('connection', (ws) => {
 	ws.send(JSON.stringify(messagesInit));
 
 	// Broadcast to all.
-	ws.broadcast = function broadcast(data) {
+	ws.broadcast = function broadcast(data, botData) {
 		wss.clients.forEach(function each(client) {
 			//if (client.readyState === SocketServer.OPEN) {
 			client.send(data);
+			if(botData){
+				client.send(botData)
+			}
 			//}
 		});
 	};
@@ -58,16 +62,12 @@ wss.on('connection', (ws) => {
 				data.type = "incomingMessage";
 				messages.push(data);
 				messagesInit = { type: "initMessages", messages: messages }
-				console.log("message format", messages)
+
 				cleverMessage = JSON.stringify(data.content);
-				console.log(cleverMessage)
 				cleverbot.write(cleverMessage, function (response) {
 					let botResponse = { type: "initMessages", messages: [response.clever_output] };
-					botResponse = JSON.stringify(botResponse);
-					console.log("response:", botResponse)
-					ws.broadcast(botResponse);
-				});
-			
+					botData = JSON.stringify(botResponse);
+				});			
 				break;
 			case "postNotification":
 				data.type = "incomingNotification";
@@ -79,7 +79,7 @@ wss.on('connection', (ws) => {
 				ws.broadcast(data);
 		}
 		data = JSON.stringify(data);
-		ws.broadcast(data);
+		ws.broadcast(data, botData);
 	});
 
 	let numberOfConnexions = { type: "incomingNumberOfConnexions", count: wss.clients.size };
