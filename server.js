@@ -62,7 +62,7 @@ wss.on('connection', (ws) => {
 
 				cleverMessage = JSON.stringify(data.content);
 				cleverbot.write(cleverMessage, function (response) {
-					let botResponse = { type: "incomingMessage", content: response.clever_output };
+					let botResponse = { type: "incomingMessage", username: "bot", content: response.clever_output };
 					messages.push(botResponse)
 				});			
 				break;
