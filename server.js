@@ -66,7 +66,7 @@ wss.on('connection', (ws) => {
 					messages.push(botResponse)
 					botResponse = JSON.stringify(botResponse);
 					console.log("How it looks like:", botResponse);
-					ws.broadcast(data);
+					ws.broadcast(botResponse);
 				});			
 				break;
 			case "postNotification":
