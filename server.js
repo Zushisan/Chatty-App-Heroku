@@ -64,8 +64,9 @@ wss.on('connection', (ws) => {
 				cleverbot.write(cleverMessage, function (response) {
 					let botResponse = { type: "incomingMessage", username: "bot", content: response.clever_output };
 					messages.push(botResponse)
-					data = data.concat(botResponse);
-					console.log(data)
+					botResponse = JSON.stringify(botResponse);
+					console.log("How it looks like:", botResponse);
+					ws.broadcast(data);
 				});			
 				break;
 			case "postNotification":
@@ -78,6 +79,7 @@ wss.on('connection', (ws) => {
 				ws.broadcast(data);
 		}
 		data = JSON.stringify(data);
+		console.log("how it should look", data)
 		ws.broadcast(data);
 	});
 
