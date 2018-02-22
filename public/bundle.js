@@ -17839,7 +17839,7 @@ object-assign
               console.log("componentDidMount <App />");
               var that = this;
               this.scrollToBottom();
-              this.socket = new WebSocket("ws://shielded-ridge-72683.herokuapp.com");
+              this.socket = new WebSocket("wss://shielded-ridge-72683.herokuapp.com");
               // const that = this;
 
               // this.socket.onopen = function (event) {
